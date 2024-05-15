@@ -1,7 +1,25 @@
-﻿internal class Program
+﻿using Microsoft.Extensions.Configuration;
+using Railsware.UI;
+
+internal class Program
 {
-    private static void Main(string[] args)
+    public static Config Config { get; private set; }
+
+    private static void Main()
     {
-        Console.WriteLine("Hello, World!");
+        try
+        {
+            // load settings
+            string configFileName = Environment.GetCommandLineArgs()[1];
+
+            Config = new ConfigManager().Load(configFileName);
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine("Error reading json config file");
+            return;
+        }
+
+        Console.WriteLine($"Hello, {Config.SenderName}!");
     }
 }

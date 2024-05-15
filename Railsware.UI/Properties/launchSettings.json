@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Railsware.UI": {
+      "commandName": "Project",
+      "commandLineArgs": ".\\appsettings.json"
+    }
+  }
+}
