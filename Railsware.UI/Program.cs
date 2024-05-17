@@ -49,7 +49,8 @@ internal class Program
                 }
                 else
                 {
-                    string content = File.ReadAllText(file);
+                    Byte[] bytes = File.ReadAllBytes(file);
+                    string content = Convert.ToBase64String(bytes);
                     message.Attachments.Add(new MailAttachment(content, file));
                 }
             }
@@ -59,6 +60,17 @@ internal class Program
         if (!isValid)
         {
             Console.WriteLine("Mail message is not valid");
+            return;
+        }
+
+        MailResult result = MailClient.Send(message, ConfigManager.ApiConfig.SendEndpoint, ConfigManager.ApiConfig.BearerToken);
+        if (result.Success)
+        {
+            Console.WriteLine("All good so far!");
+        }
+        else
+        {
+            Console.WriteLine("Mail message failed to sent");
             return;
         }
     }
