@@ -22,7 +22,7 @@ namespace Railsware.MailtrapClient.Mail
 
         public Dictionary<string, string> Headers { get; set; }
 
-        public Dictionary<string, string> CustomVariables { get; set; }
+        public Dictionary<string, string> Custom_Variables { get; set; }
 
         [Required]
         public string Subject { get; set; }

@@ -16,7 +16,7 @@ namespace Railsware.MailtrapClient.Mail
 
         public MailAttachmentDisposition Disposition { get; set; }
 
-        public string ContentId { get; set; }
+        public string Content_Id { get; set; }
 
         public MailAttachment(string content, string fileName)
         {
