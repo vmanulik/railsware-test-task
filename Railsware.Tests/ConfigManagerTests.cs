@@ -8,7 +8,7 @@ namespace Railsware.Tests
         [TestMethod]
         public void LoadValidFile()
         {
-            string configFilePath = "./appsettings.test.valid.json";
+            string configFilePath = "./TestFiles/appsettings.test.valid.json";
 
             Config config = new ConfigManager().Load(configFilePath);
 
@@ -28,7 +28,7 @@ namespace Railsware.Tests
         public void LoadNoFile()
         {
             // not a real file
-            string configFilePath = "./appsettings.no.file.json"; 
+            string configFilePath = "./TestFiles/appsettings.no.file.json"; 
 
             Action act = () => new ConfigManager().Load(configFilePath);
 
@@ -38,7 +38,7 @@ namespace Railsware.Tests
         [TestMethod]
         public void LoadInvalidNameFile()
         {
-            string configFilePath = "./appsettings.test.invalid.name.json";
+            string configFilePath = "./TestFiles/appsettings.test.invalid.name.json";
 
             Action act = () => new ConfigManager().Load(configFilePath);
 
@@ -48,7 +48,7 @@ namespace Railsware.Tests
         [TestMethod]
         public void LoadInvalidValueFile()
         {
-            string configFilePath = "./appsettings.test.invalid.array.json";
+            string configFilePath = "./TestFiles/appsettings.test.invalid.array.json";
 
             Action act = () => new ConfigManager().Load(configFilePath);
 
