@@ -1,12 +1,16 @@
-﻿using Railsware.MailtrapClient;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Railsware.MailtrapClient;
 using Railsware.MailtrapClient.Mail;
 using Railsware.UI;
+using System.Net.Http.Headers;
 
 internal class Program
 {
-    public static ConfigManager ConfigManager { get; private set; }
+    private static ConfigManager ConfigManager { get; set; }
 
-    private static void Main()
+    private static IServiceProvider ServiceProvider { get; set; }
+
+    private static bool Configure()
     {
         try
         {
@@ -18,7 +22,33 @@ internal class Program
         }
         catch
         {
-            Console.WriteLine("Error reading json config file");
+            return false;
+        }
+
+        // register default httpclient header values for reuse
+        var services = new ServiceCollection();
+        services.AddHttpClient("mailtrap", (serviceProvider, client) =>
+        {
+            // auth token
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", ConfigManager.ApiConfig.BearerToken);
+
+            client.BaseAddress = new Uri(ConfigManager.ApiConfig.SendEndpoint);
+        });
+
+        // register mailtrap client implementation
+        ServiceProvider = services
+        .AddSingleton<IMailClient, MailClient>()
+        .BuildServiceProvider();
+
+        return true;
+    }
+
+    static async Task Main()
+    {
+        bool isConfigured = Configure();
+        if (!isConfigured)
+        {
+            Console.WriteLine("Application failed to configure itself");
             return;
         }
 
@@ -63,7 +93,7 @@ internal class Program
             return;
         }
 
-        MailResult result = MailClient.Send(message, ConfigManager.ApiConfig.SendEndpoint, ConfigManager.ApiConfig.BearerToken);
+        MailResult result = await ServiceProvider.GetService<IMailClient>().SendAsync(message);
         if (result.Success)
         {
             Console.WriteLine("All good so far!");

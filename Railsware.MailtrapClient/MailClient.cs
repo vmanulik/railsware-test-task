@@ -1,22 +1,23 @@
 ﻿using Railsware.MailtrapClient.Mail;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 
 namespace Railsware.MailtrapClient
 {
-    public class MailClient
+    public class MailClient : IMailClient
     {
-        public static MailResult Send(MailMessage message, string url, string bearerToken)
+        private readonly IHttpClientFactory _factory;
+
+        public MailClient(IHttpClientFactory factory)
         {
-           using(var client = new HttpClient())
+            _factory = factory;
+        }
+
+        public async Task<MailResult> SendAsync(MailMessage message)
+        {
+           using(HttpClient client = _factory.CreateClient("mailtrap"))
             {
-                client.BaseAddress = new Uri(url);
-
-                // auth token
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", bearerToken);
-
                 // add custom serialization for enums
                 var deserializeOptions = new JsonSerializerOptions();
                 deserializeOptions.Converters.Add(new DispositionJsonConverter());
@@ -24,9 +25,9 @@ namespace Railsware.MailtrapClient
                 string json = JsonSerializer.Serialize(message, typeof(MailMessage), deserializeOptions);
                 var data = new StringContent(json, Encoding.UTF8, "application/json");
 
-                HttpResponseMessage httpResult = client.PostAsync(url, data).Result;
+                HttpResponseMessage httpResult = await client.PostAsync("send", data);
 
-                return httpResult.Content.ReadFromJsonAsync<MailResult>().Result;
+                return await httpResult.Content.ReadFromJsonAsync<MailResult>();
             }
         }
     }
