@@ -27,7 +27,7 @@ namespace Railsware.Tests
                 ItExpr.IsAny<CancellationToken>()
             )
             .Returns(Task.FromResult(result))
-            .Verifiable()            ;
+            .Verifiable();
 
             var httpClient = new HttpClient(_handlerMock.Object)
             {
