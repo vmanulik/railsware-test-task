@@ -55,7 +55,7 @@ internal class Program
             }
         }
 
-        bool isValid = MailValidator.TryValidate(message);
+        bool isValid = message.Validate();
         if (!isValid)
         {
             Console.WriteLine("Mail message is not valid");

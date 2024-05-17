@@ -24,7 +24,7 @@ namespace Railsware.Tests
                 }
             };
 
-            bool isValid = MailValidator.TryValidate(message);
+            bool isValid = message.Validate();
 
             Assert.IsTrue(isValid);
         }
@@ -43,7 +43,7 @@ namespace Railsware.Tests
                 Html = "Html"
             };
 
-            bool isValid = MailValidator.TryValidate(message);
+            bool isValid = message.Validate();
 
             Assert.IsFalse(isValid);
         }
@@ -63,7 +63,7 @@ namespace Railsware.Tests
                 Html = "Html"
             };
 
-            bool isValid = MailValidator.TryValidate(message);
+            bool isValid = message.Validate();
 
             Assert.IsFalse(isValid);
         }
@@ -81,7 +81,7 @@ namespace Railsware.Tests
                 Subject = "Test Subject"
             };
 
-            bool isValid = MailValidator.TryValidate(message);
+            bool isValid = message.Validate();
 
             Assert.IsFalse(isValid);
         }

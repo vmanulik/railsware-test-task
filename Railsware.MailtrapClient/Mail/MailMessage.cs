@@ -35,5 +35,18 @@ namespace Railsware.MailtrapClient.Mail
 
         [MaxLength(255)]
         public string Category { get; set; }
+
+        public bool Validate()
+        {
+            var valContext = new ValidationContext(this, null, null);
+            var validationsResults = new List<ValidationResult>();
+
+            // validate data annotation attributes compliance
+            bool isValidByAttributes = Validator.TryValidateObject(this, valContext, validationsResults, true);
+
+            // check txt and html body values only if attribute validation passed
+            // extensive logging and error output is over the bounds of the task
+            return isValidByAttributes && (Text != null || Html != null);
+        }
     }
 }
