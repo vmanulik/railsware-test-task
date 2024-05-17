@@ -2,7 +2,7 @@
   "profiles": {
     "Railsware.UI": {
       "commandName": "Project",
-      "commandLineArgs": ".\\appsettings.json"
+      "commandLineArgs": ".\\messageconfig.json\r\n.\\apiconfig.json"
     }
   }
 }

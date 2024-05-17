@@ -8,29 +8,33 @@ namespace Railsware.Tests
         [TestMethod]
         public void LoadValidFile()
         {
-            string configFilePath = "./TestFiles/appsettings.test.valid.json";
+            string configFilePath = "./TestFiles/messageconfig.test.valid.json";
+            string apiFilePath = "./TestFiles/apiconfig.json";
 
-            Config config = new ConfigManager().Load(configFilePath);
+            var configManager = new ConfigManager();
+            configManager.Load(configFilePath, apiFilePath);
 
-            Assert.IsNotNull(config);
-            Assert.IsNotNull(config.SenderName);
-            Assert.IsNotNull(config.SenderEmail);
-            Assert.IsNotNull(config.RecipientName);
-            Assert.IsNotNull(config.RecipientEmail);
-            Assert.IsNotNull(config.Subject);
-            Assert.IsNotNull(config.Text);
-            Assert.IsNotNull(config.Html);
-            Assert.IsNotNull(config.AttachmentFiles);
-            Assert.IsTrue(config.AttachmentFiles.Length > 1);
+            Assert.IsNotNull(configManager.MessageConfig);
+            Assert.IsNotNull(configManager.MessageConfig.SenderName);
+            Assert.IsNotNull(configManager.MessageConfig.SenderEmail);
+            Assert.IsNotNull(configManager.MessageConfig.RecipientName);
+            Assert.IsNotNull(configManager.MessageConfig.RecipientEmail);
+            Assert.IsNotNull(configManager.MessageConfig.Subject);
+            Assert.IsNotNull(configManager.MessageConfig.Text);
+            Assert.IsNotNull(configManager.MessageConfig.Html);
+            Assert.IsNotNull(configManager.MessageConfig.AttachmentFiles);
+            Assert.IsTrue(configManager.MessageConfig.AttachmentFiles.Length > 1);
         }
 
         [TestMethod]
         public void LoadNoFile()
         {
             // not a real file
-            string configFilePath = "./TestFiles/appsettings.no.file.json"; 
+            string configFilePath = "./TestFiles/messageconfig.no.file.json";
+            string apiFilePath = "./TestFiles/apiconfig.json";
 
-            Action act = () => new ConfigManager().Load(configFilePath);
+            var configManager = new ConfigManager();
+            Action act = () => configManager.Load(configFilePath, apiFilePath);
 
             Assert.ThrowsException<FileNotFoundException>(act);
         }
@@ -38,9 +42,11 @@ namespace Railsware.Tests
         [TestMethod]
         public void LoadInvalidNameFile()
         {
-            string configFilePath = "./TestFiles/appsettings.test.invalid.name.json";
+            string configFilePath = "./TestFiles/messageconfig.test.invalid.name.json";
+            string apiFilePath = "./TestFiles/apiconfig.json";
 
-            Action act = () => new ConfigManager().Load(configFilePath);
+            var configManager = new ConfigManager();
+            Action act = () => configManager.Load(configFilePath, apiFilePath);
 
             Assert.ThrowsException<FileLoadException>(act);
         }
@@ -48,9 +54,11 @@ namespace Railsware.Tests
         [TestMethod]
         public void LoadInvalidValueFile()
         {
-            string configFilePath = "./TestFiles/appsettings.test.invalid.array.json";
+            string configFilePath = "./TestFiles/messageconfig.test.invalid.array.json";
+            string apiFilePath = "./TestFiles/apiconfig.json";
 
-            Action act = () => new ConfigManager().Load(configFilePath);
+            var configManager = new ConfigManager();
+            Action act = () => configManager.Load(configFilePath, apiFilePath);
 
             Assert.ThrowsException<FileLoadException>(act);
         }

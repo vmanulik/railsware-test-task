@@ -2,44 +2,67 @@
 
 namespace Railsware.UI
 {
+
     public class ConfigManager
     {
-        public Config Load(string configFilePath)
-        {
-            Config config;
+        public MessageConfig MessageConfig { get; private set; }
+        public ApiConfig ApiConfig { get; private set; }
 
-            if(!File.Exists(configFilePath))
+        public void Load(string applicationConfigFilePath, string apiConfigFilePath)
+        {
+            if (!File.Exists(applicationConfigFilePath) || !File.Exists(apiConfigFilePath))
             {
                 throw new FileNotFoundException();
             }
 
-            using (Stream jsonStream = new FileStream(configFilePath, FileMode.Open))
+            // load message values
+            using (Stream jsonStream = new FileStream(applicationConfigFilePath, FileMode.Open))
             {
                 IConfigurationRoot configBuilder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonStream(jsonStream)
                 .Build();
 
-                config = configBuilder.Get<Config>();
+                MessageConfig = configBuilder.Get<MessageConfig>();
             }
 
             // check if any field is empty
-            if (config == null 
-                // for string options
-                || config.GetType().GetProperties()
-                    .Where(pi => pi.PropertyType == typeof(string))
-                    .Select(pi => (string) pi.GetValue(config))
-                    .Any(val => string.IsNullOrEmpty(val))
-                // for array option
-                || config.GetType().GetProperties()
-                .Where(pi => pi.PropertyType == typeof(string[]))
-                .Select(pi => (string[]) pi.GetValue(config))
-                .Any(val => val == null || val.Length < 1))
+            if (!IsValid(MessageConfig))
             {
                 throw new FileLoadException();
             }
 
-            return config;
+            // load api values
+            using (Stream jsonStream = new FileStream(apiConfigFilePath, FileMode.Open))
+            {
+                IConfigurationRoot configBuilder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonStream(jsonStream)
+                .Build();
+
+                ApiConfig = configBuilder.Get<ApiConfig>();
+            }
+
+            // check if any field is empty
+            if (!IsValid(ApiConfig))
+            {
+                throw new FileLoadException();
+            }
+        }
+
+        private bool IsValid(object config)
+        {
+            return config != null
+                    // for string options
+                    && !config.GetType().GetProperties()
+                        .Where(pi => pi.PropertyType == typeof(string))
+                        .Select(pi => (string) pi.GetValue(config))
+                        .Any(val => string.IsNullOrEmpty(val))
+                    // for array option
+                    && !config.GetType().GetProperties()
+                    .Where(pi => pi.PropertyType == typeof(string[]))
+                    .Select(pi => (string[]) pi.GetValue(config))
+                    .Any(val => val == null || val.Length < 1);
         }
     }
 }

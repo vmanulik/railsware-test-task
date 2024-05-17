@@ -1,17 +1,20 @@
-﻿using Railsware.MailtrapClient.Mail;
+﻿using Railsware.MailtrapClient;
+using Railsware.MailtrapClient.Mail;
 using Railsware.UI;
 
 internal class Program
 {
-    public static Config Config { get; private set; }
+    public static ConfigManager ConfigManager { get; private set; }
 
     private static void Main()
     {
         try
         {
             // load settings
-            string configFileName = Environment.GetCommandLineArgs()[1];
-            Config = new ConfigManager().Load(configFileName);
+            string applicationConfigFileName = Environment.GetCommandLineArgs()[1];
+            string apiConfigFileName = Environment.GetCommandLineArgs()[2];
+            ConfigManager = new ConfigManager();
+            ConfigManager.Load(applicationConfigFileName, apiConfigFileName);
         }
         catch
         {
@@ -22,22 +25,22 @@ internal class Program
         // build message
         var message = new MailMessage()
         {
-            From = new MailAddress(Config.SenderEmail, Config.SenderEmail),
+            From = new MailAddress(ConfigManager.MessageConfig.SenderEmail, ConfigManager.MessageConfig.SenderEmail),
             To = new List<MailAddress>()
                 {
-                     new MailAddress(Config.RecipientName, Config.RecipientEmail)
+                     new MailAddress(ConfigManager.MessageConfig.RecipientName, ConfigManager.MessageConfig.RecipientEmail)
                 },
-            Subject = Config.Subject,
-            Text = Config.Text,
-            Html = Config.Html
+            Subject = ConfigManager.MessageConfig.Subject,
+            Text = ConfigManager.MessageConfig.Text,
+            Html = ConfigManager.MessageConfig.Html
         };
 
         // try load attachments
-        if (Config.AttachmentFiles.Any())
+        if (ConfigManager.MessageConfig.AttachmentFiles.Any())
         {
             message.Attachments = new List<MailAttachment>();
 
-            foreach (string file in Config.AttachmentFiles)
+            foreach (string file in ConfigManager.MessageConfig.AttachmentFiles)
             {
                 if (!File.Exists(file))
                 {
@@ -52,14 +55,11 @@ internal class Program
             }
         }
 
-        // validate
         bool isValid = MailValidator.TryValidate(message);
         if (!isValid)
         {
             Console.WriteLine("Mail message is not valid");
             return;
         }
-
-        Console.WriteLine("All good so far!");
     }
 }

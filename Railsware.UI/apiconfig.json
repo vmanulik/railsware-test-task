@@ -1,0 +1,4 @@
+{
+  "SendEndpoint": "https://send.api.mailtrap.io/api/send",
+  "BearerToken": "a15d76a99f7b42bcc633036fb6d7b32b"
+}

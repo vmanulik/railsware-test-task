@@ -25,13 +25,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="TestFiles\appsettings.test.invalid.name.json">
+    <None Update="TestFiles\apiconfig.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="TestFiles\appsettings.test.valid.json">
+    <None Update="TestFiles\messageconfig.test.invalid.name.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="TestFiles\appsettings.test.invalid.array.json">
+    <None Update="TestFiles\messageconfig.test.valid.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestFiles\messageconfig.test.invalid.array.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="TestFiles\attachment.txt">

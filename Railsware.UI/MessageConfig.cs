@@ -1,6 +1,6 @@
 ﻿namespace Railsware.UI
 {
-    public class Config
+    public class MessageConfig
     {
         public required string SenderName { get; set; }
         public required string SenderEmail { get; set; }
