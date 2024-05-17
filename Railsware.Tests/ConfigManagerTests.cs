@@ -62,5 +62,19 @@ namespace Railsware.Tests
 
             Assert.ThrowsException<FileLoadException>(act);
         }
+
+        [TestMethod]
+        public void LoadApiFile()
+        {
+            string configFilePath = "./TestFiles/messageconfig.test.valid.json";
+            string apiFilePath = "./TestFiles/apiconfig.json";
+
+            var configManager = new ConfigManager();
+            configManager.Load(configFilePath, apiFilePath);
+
+            Assert.IsNotNull(configManager.ApiConfig);
+            Assert.IsNotNull(configManager.ApiConfig.SendEndpoint);
+            Assert.IsNotNull(configManager.ApiConfig.BearerToken);
+        }
     }
 }

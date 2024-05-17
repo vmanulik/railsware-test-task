@@ -3,7 +3,7 @@ using Railsware.MailtrapClient.Mail;
 namespace Railsware.Tests
 {
     [TestClass]
-    public class MailValidationTest
+    public class MailValidationTests
     {
         [TestMethod]
         public void ValidateValidMessage()
